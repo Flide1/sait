@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#11100f">
 <title>Пацики Вецлара</title>
 
 <style>
@@ -14,9 +15,13 @@
     --muted: #999087;
 }
 
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     margin: 0;
@@ -33,7 +38,10 @@ nav {
     color: white;
 }
 
-nav a { color: white; text-decoration: none; }
+nav a {
+    color: white;
+    text-decoration: none;
+}
 
 .hero {
     min-height: 75vh;
@@ -74,9 +82,17 @@ h1 {
     text-decoration: none;
     border: 0;
     cursor: pointer;
+    transition: .2s;
 }
 
-section { padding: 85px 8%; }
+.button:hover {
+    background: #76202e;
+    transform: translateY(-3px);
+}
+
+section {
+    padding: 85px 8%;
+}
 
 h2 {
     font-size: clamp(35px, 6vw, 65px);
@@ -89,6 +105,8 @@ h2 {
     color: white;
 }
 
+/* КАРТОЧКИ УЧАСТНИКОВ */
+
 .members {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -97,6 +115,7 @@ h2 {
 }
 
 .member {
+    width: 100%;
     background: #211e1c;
     border: 1px solid #51463f;
     padding: 28px;
@@ -104,11 +123,13 @@ h2 {
     text-align: left;
     cursor: pointer;
     transition: .25s;
+    font-family: inherit;
 }
 
 .member:hover {
     transform: translateY(-7px);
     border-color: var(--accent);
+    background: #292321;
 }
 
 .member span {
@@ -122,9 +143,121 @@ h2 {
     margin: 35px 0 10px;
 }
 
-.member p { color: #aaa19a; }
+.member p {
+    color: #aaa19a;
+    font-size: 13px;
+}
 
-/* GOOGLE MAP */
+/* ПРОФИЛЬ УЧАСТНИКА */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #000d;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    padding: 35px;
+    background: #1b1917;
+    color: white;
+    border: 1px solid var(--accent);
+    box-shadow: 0 20px 80px #0009;
+    animation: appear .25s ease;
+}
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.profile-avatar {
+    width: 105px;
+    height: 105px;
+    margin: 30px 0 20px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #a52e40, #48141d);
+    color: white;
+    font-size: 42px;
+    font-weight: bold;
+    border: 2px solid #d45b6c;
+}
+
+.profile-label {
+    color: #d45b6c;
+    font-size: 11px;
+    letter-spacing: .2em;
+}
+
+#bioName {
+    font: 38px Georgia, serif;
+    margin: 15px 0;
+}
+
+#bioText {
+    color: #c0b7ae;
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+.profile-info {
+    margin-top: 25px;
+    padding: 18px;
+    background: #292421;
+    border-left: 3px solid var(--accent);
+}
+
+.profile-info small {
+    color: #d45b6c;
+    letter-spacing: .12em;
+}
+
+.profile-info p {
+    margin-bottom: 0;
+    color: #c0b7ae;
+}
+
+.profile-footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #51463f;
+    color: #a52e40;
+    font-size: 10px;
+    letter-spacing: .15em;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* GOOGLE MAPS */
 
 .map-section {
     background: #171614;
@@ -143,61 +276,12 @@ h2 {
     font-size: 12px;
 }
 
-/* BIO POPUP */
+/* ЗАКОНЫ */
 
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    background: #000c;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.modal.active { display: flex; }
-
-.modal-content {
-    width: 100%;
-    max-width: 480px;
-    padding: 35px;
-    background: #1b1917;
-    color: white;
-    border: 1px solid #a52e40;
-    position: relative;
-    animation: appear .25s ease;
-}
-
-@keyframes appear {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.close {
-    position: absolute;
-    right: 18px;
-    top: 12px;
-    border: 0;
-    background: none;
-    color: white;
-    font-size: 28px;
-    cursor: pointer;
-}
-
-#bioNumber {
-    color: #d45b6c;
-    letter-spacing: .2em;
-    font-size: 12px;
-}
-
-#bioName {
-    font: 36px Georgia, serif;
-}
-
-#bioText {
-    color: #aaa19a;
-    line-height: 1.8;
+.rule {
+    padding: 15px 0;
+    border-bottom: 1px solid #51463f;
+    color: #c0b7ae;
 }
 
 footer {
@@ -212,10 +296,29 @@ footer {
 }
 
 @media(max-width: 750px) {
-    .members { grid-template-columns: 1fr; }
-    section { padding: 65px 24px; }
-    .hero { padding: 100px 25px; }
-    #map { height: 420px; }
+    .members {
+        grid-template-columns: 1fr;
+    }
+
+    section {
+        padding: 65px 24px;
+    }
+
+    .hero {
+        padding: 100px 25px;
+    }
+
+    #map {
+        height: 420px;
+    }
+
+    .modal-content {
+        padding: 25px;
+    }
+
+    footer {
+        flex-direction: column;
+    }
 }
 </style>
 </head>
@@ -227,121 +330,183 @@ footer {
     <a href="#members">Участники</a>
 </nav>
 
+<!-- ГЛАВНЫЙ ЭКРАН -->
+
 <header class="hero">
     <span class="eyebrow">GERMANY · WETZLAR · 18+</span>
+
     <h1>ПАЦИКИ<br>ВЕЦЛАРА.</h1>
-    <p>Три легенды. Один город. История продолжается.</p>
-    <a class="button" href="#members">НАША КОМАНДА ↓</a>
+
+    <p>
+        Три легенды. Один город.
+        История продолжается.
+    </p>
+
+    <a class="button" href="#members">
+        НАША КОМАНДА ↓
+    </a>
 </header>
 
 <!-- УЧАСТНИКИ -->
 
 <section class="dark" id="members">
+
     <span class="eyebrow">THE CREW · 001</span>
+
     <h2>ЛИЧНЫЕ ДЕЛА<br>ПАЦИКОВ</h2>
+
+    <p style="color:#aaa19a">
+        Нажми на любого участника, чтобы открыть его личное досье.
+    </p>
 
     <div class="members">
 
         <button class="member" onclick="showBio('makarov')">
             <span>01 / MEMBER</span>
-            <h3>Иван Макаров</h3>
-            <p>Нажми, чтобы открыть досье ↗</p>
+            <h3>Иван Макаров ↗</h3>
+            <p>Открыть личное досье</p>
         </button>
 
         <button class="member" onclick="showBio('tarasyuk')">
             <span>02 / MEMBER</span>
-            <h3>Олександр Тарасюк</h3>
-            <p>Нажми, чтобы открыть досье ↗</p>
+            <h3>Олександр Тарасюк ↗</h3>
+            <p>Открыть личное досье</p>
         </button>
 
         <button class="member" onclick="showBio('masterskikh')">
             <span>03 / MEMBER</span>
-            <h3>Илья Мастерских</h3>
-            <p>Нажми, чтобы открыть досье ↗</p>
+            <h3>Илья Мастерских ↗</h3>
+            <p>Открыть личное досье</p>
         </button>
 
     </div>
+
 </section>
 
 <!-- КАРТА -->
 
 <section class="map-section">
+
     <span class="eyebrow">GERMANY · WETZLAR</span>
+
     <h2>НАША<br>ТЕРРИТОРИЯ</h2>
-    <p>Главная точка сбора — Forum Wetzlar.</p>
+
+    <p style="color:#aaa19a">
+        Главная точка сбора — Forum Wetzlar.
+    </p>
 
     <div id="map"></div>
 
     <p class="map-note">
-        Красным контуром обозначена приблизительная территория Forum.
+        Красным выделена приблизительная территория Forum Wetzlar.
     </p>
+
 </section>
 
 <!-- ЗАКОНЫ -->
 
 <section class="dark">
+
     <span class="eyebrow">THE CODE</span>
+
     <h2>ЗАКОНЫ<br>ПАЦИКОВ</h2>
 
-    <p>01 — Быть чётким.</p>
-    <p>02 — Не забывать своих.</p>
-    <p>03 — Уважать легенды.</p>
-    <p>04 — Создавать новые истории.</p>
+    <div class="rule">01 — Быть чётким.</div>
+    <div class="rule">02 — Не забывать своих.</div>
+    <div class="rule">03 — Уважать легенды.</div>
+    <div class="rule">04 — Создавать новые истории.</div>
+
 </section>
 
 <footer>
     <span>PV® — ПАЦИКИ ВЕЦЛАРА</span>
     <span>WETZLAR · GERMANY</span>
+    <span>EST. FOREVER</span>
 </footer>
 
-<!-- ОКНО БИОГРАФИИ -->
+<!-- ОКНО ПРОФИЛЯ -->
 
 <div class="modal" id="bioModal" onclick="closeOutside(event)">
+
     <div class="modal-content">
+
         <button class="close" onclick="closeBio()">×</button>
-        <span id="bioNumber">01 / CLASSIFIED</span>
-        <h2 id="bioName">Имя</h2>
-        <p id="bioText">Описание участника</p>
+
+        <span class="profile-label" id="bioNumber"></span>
+
+        <div class="profile-avatar" id="bioAvatar">?</div>
+
+        <h2 id="bioName"></h2>
+
+        <p id="bioText"></p>
+
+        <div class="profile-info">
+            <small>СТАТУС УЧАСТНИКА</small>
+            <p id="bioStatus"></p>
+        </div>
+
+        <div class="profile-footer">
+            PACIKI WETZLAR® — OFFICIAL MEMBER
+        </div>
+
     </div>
+
 </div>
 
 <script>
 
-// БИОГРАФИИ УЧАСТНИКОВ
-// Можешь менять описания прямо здесь.
+/* БИОГРАФИИ УЧАСТНИКОВ */
 
 const bios = {
+
     makarov: {
         number: "01 / LEGEND",
         name: "Иван Макаров",
-        text: "Легендарный участник объединения. Известен своим характером и вкладом в историю пациков Вецлара."
+        avatar: "И",
+        text: "Здесь находится личная биография Ивана Макарова. Напиши его историю, интересы, достижения и интересные факты.",
+        status: "Легенда объединения"
     },
 
     tarasyuk: {
         number: "02 / MEMBER",
         name: "Олександр Тарасюк",
-        text: "Участник секретного состава. Подробности биографии пока засекречены."
+        avatar: "О",
+        text: "Здесь находится личная биография Олександра Тарасюка. Добавь информацию о его характере, увлечениях и историях.",
+        status: "Официальный участник"
     },
 
     masterskikh: {
         number: "03 / SPECIAL MEMBER",
         name: "Илья Мастерских",
-        text: "Особая личность объединения. Статус: слишком чёткий для обычного описания."
+        avatar: "И",
+        text: "Здесь находится личная биография Ильи Мастерских. Напиши, чем он известен, какие у него интересы и почему он особенный участник команды.",
+        status: "Особая личность объединения"
     }
+
 };
 
+/* ОТКРЫТИЕ ПРОФИЛЯ */
+
 function showBio(person) {
+
     const bio = bios[person];
 
     document.getElementById("bioNumber").textContent = bio.number;
     document.getElementById("bioName").textContent = bio.name;
+    document.getElementById("bioAvatar").textContent = bio.avatar;
     document.getElementById("bioText").textContent = bio.text;
+    document.getElementById("bioStatus").textContent = bio.status;
 
     document.getElementById("bioModal").classList.add("active");
+
+    document.body.style.overflow = "hidden";
 }
+
+/* ЗАКРЫТИЕ ПРОФИЛЯ */
 
 function closeBio() {
     document.getElementById("bioModal").classList.remove("active");
+    document.body.style.overflow = "";
 }
 
 function closeOutside(event) {
@@ -350,10 +515,20 @@ function closeOutside(event) {
     }
 }
 
-// GOOGLE MAPS
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        closeBio();
+    }
+});
+
+/* GOOGLE MAPS */
 
 function initMap() {
-    const forum = { lat: 50.56474, lng: 8.50495 };
+
+    const forum = {
+        lat: 50.56474,
+        lng: 8.50495
+    };
 
     const map = new google.maps.Map(
         document.getElementById("map"),
@@ -367,7 +542,6 @@ function initMap() {
         }
     );
 
-    // Метка Forum Wetzlar
     const marker = new google.maps.Marker({
         position: forum,
         map: map,
@@ -375,14 +549,21 @@ function initMap() {
     });
 
     const info = new google.maps.InfoWindow({
-        content: "<b>FORUM WETZLAR</b><br>Главная территория пациков"
+        content: `
+            <div style="color:#171513">
+                <b>FORUM WETZLAR</b>
+                <br>
+                Главная точка сбора пациков
+            </div>
+        `
     });
 
-    marker.addListener("click", () => {
+    marker.addListener("click", function() {
         info.open(map, marker);
     });
 
-    // ПРИБЛИЗИТЕЛЬНЫЙ КОНТУР FORUM
+    /* ПРИБЛИЗИТЕЛЬНЫЙ КОНТУР FORUM */
+
     const forumArea = new google.maps.Polygon({
         paths: [
             { lat: 50.56505, lng: 8.50455 },
@@ -390,6 +571,7 @@ function initMap() {
             { lat: 50.56455, lng: 8.50540 },
             { lat: 50.56445, lng: 8.50460 }
         ],
+
         strokeColor: "#a52e40",
         strokeOpacity: 1,
         strokeWeight: 4,
@@ -398,16 +580,20 @@ function initMap() {
         map: map
     });
 
-    forumArea.addListener("click", () => {
-        info.setContent("<b>ТЕРРИТОРИЯ ПАЦИКОВ</b><br>Forum Wetzlar");
+    forumArea.addListener("click", function() {
+        info.setContent(
+            "<div style='color:#171513'><b>ТЕРРИТОРИЯ ПАЦИКОВ</b><br>Forum Wetzlar</div>"
+        );
+
         info.setPosition(forum);
         info.open(map);
     });
+
 }
 
 </script>
 
-<!-- ВСТАВЬ СВОЙ GOOGLE MAPS API KEY ВМЕСТО YOUR_API_KEY -->
+<!-- ВСТАВЬ GOOGLE MAPS API KEY ВМЕСТО YOUR_API_KEY -->
 
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
