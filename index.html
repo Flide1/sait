@@ -2,602 +2,542 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#11100f">
-<title>Пацики Вецлара</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПАЦИКИ ВЕЦЛАРА</title>
 
-<style>
-:root {
-    --bg: #f4efe6;
-    --dark: #11100f;
-    --accent: #a52e40;
-    --muted: #999087;
-}
+    <!-- LEAFLET -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
 
-* {
-    box-sizing: border-box;
-}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-html {
-    scroll-behavior: smooth;
-}
+        :root {
+            --bg: #111111;
+            --card: #1c1c1c;
+            --text: #f3eee5;
+            --accent: #a52e40;
+            --muted: #aaa29a;
+        }
 
-body {
-    margin: 0;
-    background: var(--bg);
-    color: #171513;
-    font-family: "Segoe UI", sans-serif;
-}
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+            transition: 0.3s;
+        }
 
-nav {
-    padding: 22px 7%;
-    display: flex;
-    justify-content: space-between;
-    background: var(--dark);
-    color: white;
-}
+        body.light {
+            --bg: #eee8dc;
+            --card: #ffffff;
+            --text: #171717;
+            --accent: #922638;
+            --muted: #625c56;
+        }
 
-nav a {
-    color: white;
-    text-decoration: none;
-}
+        header {
+            min-height: 350px;
+            padding: 70px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.85)),
+                url("cubaimg.jpg") center/cover;
+        }
 
-.hero {
-    min-height: 75vh;
-    padding: 100px 8%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background: var(--dark);
-    color: white;
-}
+        header h1 {
+            font-size: clamp(36px, 7vw, 75px);
+            font-weight: 900;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 0 4px 20px #000;
+        }
 
-.eyebrow {
-    color: #d45b6c;
-    letter-spacing: .2em;
-    font-size: 12px;
-    font-weight: bold;
-}
+        header p {
+            margin-top: 15px;
+            color: #ddd;
+            font-size: 17px;
+            letter-spacing: 3px;
+        }
 
-h1 {
-    font-size: clamp(55px, 10vw, 110px);
-    line-height: .9;
-    letter-spacing: -.06em;
-    margin: 25px 0;
-}
+        .theme-button {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            padding: 11px 16px;
+            border: 1px solid var(--accent);
+            background: var(--card);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+        }
 
-.hero p {
-    color: #aaa19a;
-    max-width: 400px;
-}
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 45px 20px;
+        }
 
-.button {
-    display: inline-block;
-    width: fit-content;
-    padding: 14px 22px;
-    margin-top: 20px;
-    background: var(--accent);
-    color: white;
-    text-decoration: none;
-    border: 0;
-    cursor: pointer;
-    transition: .2s;
-}
+        section {
+            margin-bottom: 65px;
+        }
 
-.button:hover {
-    background: #76202e;
-    transform: translateY(-3px);
-}
+        .section-title {
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
 
-section {
-    padding: 85px 8%;
-}
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 65px;
+            height: 3px;
+            background: var(--accent);
+            margin: 12px auto 0;
+        }
 
-h2 {
-    font-size: clamp(35px, 6vw, 65px);
-    line-height: .95;
-    letter-spacing: -.04em;
-}
+        .members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 22px;
+        }
 
-.dark {
-    background: var(--dark);
-    color: white;
-}
+        .member {
+            background: var(--card);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.25s;
+        }
 
-/* КАРТОЧКИ УЧАСТНИКОВ */
+        .member:hover {
+            transform: translateY(-7px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(165, 46, 64, .2);
+        }
 
-.members {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    margin-top: 40px;
-}
+        .avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            font-weight: bold;
+            color: white;
+            border: 3px solid #d5a0a8;
+        }
 
-.member {
-    width: 100%;
-    background: #211e1c;
-    border: 1px solid #51463f;
-    padding: 28px;
-    color: white;
-    text-align: left;
-    cursor: pointer;
-    transition: .25s;
-    font-family: inherit;
-}
+        .member h3 {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
 
-.member:hover {
-    transform: translateY(-7px);
-    border-color: var(--accent);
-    background: #292321;
-}
+        .member p {
+            color: var(--muted);
+            font-size: 14px;
+        }
 
-.member span {
-    color: #d45b6c;
-    font-size: 12px;
-    letter-spacing: .15em;
-}
+        .map-description {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
 
-.member h3 {
-    font: 26px Georgia, serif;
-    margin: 35px 0 10px;
-}
+        #map {
+            width: 100%;
+            height: 500px;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            z-index: 1;
+        }
 
-.member p {
-    color: #aaa19a;
-    font-size: 13px;
-}
+        .soundcloud {
+            text-align: center;
+            padding: 35px 20px;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid #444;
+        }
 
-/* ПРОФИЛЬ УЧАСТНИКА */
+        .soundcloud p {
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
 
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background: #000d;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    overflow-y: auto;
-}
+        .soundcloud a {
+            display: inline-block;
+            padding: 13px 25px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            transition: 0.2s;
+        }
 
-.modal.active {
-    display: flex;
-}
+        .soundcloud a:hover {
+            background: #c13b50;
+            transform: scale(1.04);
+        }
 
-.modal-content {
-    position: relative;
-    width: 100%;
-    max-width: 480px;
-    padding: 35px;
-    background: #1b1917;
-    color: white;
-    border: 1px solid var(--accent);
-    box-shadow: 0 20px 80px #0009;
-    animation: appear .25s ease;
-}
+        footer {
+            text-align: center;
+            padding: 30px 15px;
+            border-top: 1px solid #444;
+            color: var(--muted);
+            font-size: 13px;
+        }
 
-.close {
-    position: absolute;
-    top: 12px;
-    right: 18px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 32px;
-    cursor: pointer;
-}
+        /* MODAL */
 
-.profile-avatar {
-    width: 105px;
-    height: 105px;
-    margin: 30px 0 20px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(135deg, #a52e40, #48141d);
-    color: white;
-    font-size: 42px;
-    font-weight: bold;
-    border: 2px solid #d45b6c;
-}
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            inset: 0;
+            background: rgba(0,0,0,.85);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-.profile-label {
-    color: #d45b6c;
-    font-size: 11px;
-    letter-spacing: .2em;
-}
+        .modal-content {
+            position: relative;
+            background: var(--card);
+            color: var(--text);
+            width: 100%;
+            max-width: 450px;
+            padding: 35px 25px;
+            border-radius: 14px;
+            border: 1px solid var(--accent);
+            text-align: center;
+            animation: appear .2s ease;
+        }
 
-#bioName {
-    font: 38px Georgia, serif;
-    margin: 15px 0;
-}
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: scale(.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
 
-#bioText {
-    color: #c0b7ae;
-    line-height: 1.8;
-    font-size: 15px;
-}
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 17px;
+            font-size: 30px;
+            cursor: pointer;
+            color: var(--muted);
+        }
 
-.profile-info {
-    margin-top: 25px;
-    padding: 18px;
-    background: #292421;
-    border-left: 3px solid var(--accent);
-}
+        .close:hover {
+            color: var(--accent);
+        }
 
-.profile-info small {
-    color: #d45b6c;
-    letter-spacing: .12em;
-}
+        .modal-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 35px;
+            font-weight: bold;
+            margin: 0 auto 18px;
+        }
 
-.profile-info p {
-    margin-bottom: 0;
-    color: #c0b7ae;
-}
+        #bioNumber {
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
 
-.profile-footer {
-    margin-top: 30px;
-    padding-top: 15px;
-    border-top: 1px solid #51463f;
-    color: #a52e40;
-    font-size: 10px;
-    letter-spacing: .15em;
-}
+        #bioName {
+            margin-bottom: 15px;
+            font-size: 25px;
+        }
 
-@keyframes appear {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        #bioText {
+            color: var(--muted);
+            line-height: 1.7;
+        }
 
-/* GOOGLE MAPS */
+        #bioStatus {
+            margin-top: 20px;
+            color: var(--accent);
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
 
-.map-section {
-    background: #171614;
-    color: white;
-}
+        @media (max-width: 600px) {
+            header {
+                min-height: 280px;
+            }
 
-#map {
-    height: 500px;
-    width: 100%;
-    margin-top: 35px;
-    border: 1px solid #51463f;
-}
+            header p {
+                font-size: 13px;
+            }
 
-.map-note {
-    color: #aaa19a;
-    font-size: 12px;
-}
+            main {
+                padding: 35px 15px;
+            }
 
-/* ЗАКОНЫ */
-
-.rule {
-    padding: 15px 0;
-    border-bottom: 1px solid #51463f;
-    color: #c0b7ae;
-}
-
-footer {
-    padding: 30px 8%;
-    background: #090908;
-    color: #888;
-    font-size: 12px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-@media(max-width: 750px) {
-    .members {
-        grid-template-columns: 1fr;
-    }
-
-    section {
-        padding: 65px 24px;
-    }
-
-    .hero {
-        padding: 100px 25px;
-    }
-
-    #map {
-        height: 420px;
-    }
-
-    .modal-content {
-        padding: 25px;
-    }
-
-    footer {
-        flex-direction: column;
-    }
-}
-</style>
+            #map {
+                height: 400px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<nav>
-    <strong>PV®</strong>
-    <a href="#members">Участники</a>
-</nav>
+    <button class="theme-button" onclick="toggleTheme()">
+        ☀ / ☾ ТЕМА
+    </button>
 
-<!-- ГЛАВНЫЙ ЭКРАН -->
+    <header>
+        <h1>ПАЦИКИ ВЕЦЛАРА</h1>
+        <p>WETZLAR · GERMANY · 2026</p>
+    </header>
 
-<header class="hero">
-    <span class="eyebrow">GERMANY · WETZLAR · 18+</span>
+    <main>
 
-    <h1>ПАЦИКИ<br>ВЕЦЛАРА.</h1>
+        <!-- УЧАСТНИКИ -->
 
-    <p>
-        Три легенды. Один город.
-        История продолжается.
-    </p>
+        <section>
+            <h2 class="section-title">НАШИ ПАЦИКИ</h2>
 
-    <a class="button" href="#members">
-        НАША КОМАНДА ↓
-    </a>
-</header>
+            <div class="members">
 
-<!-- УЧАСТНИКИ -->
+                <div class="member" onclick="showBio('makarov')">
+                    <div class="avatar">ИМ</div>
+                    <h3>Иван Макаров</h3>
+                    <p>Участник тусовки</p>
+                </div>
 
-<section class="dark" id="members">
+                <div class="member" onclick="showBio('tarasyuk')">
+                    <div class="avatar">ОТ</div>
+                    <h3>Олександр Тарасюк</h3>
+                    <p>Участник тусовки</p>
+                </div>
 
-    <span class="eyebrow">THE CREW · 001</span>
+                <div class="member" onclick="showBio('masterskikh')">
+                    <div class="avatar">ИМ</div>
+                    <h3>Илья Мастерских</h3>
+                    <p>Участник тусовки</p>
+                </div>
 
-    <h2>ЛИЧНЫЕ ДЕЛА<br>ПАЦИКОВ</h2>
-
-    <p style="color:#aaa19a">
-        Нажми на любого участника, чтобы открыть его личное досье.
-    </p>
-
-    <div class="members">
-
-        <button class="member" onclick="showBio('makarov')">
-            <span>01 / MEMBER</span>
-            <h3>Иван Макаров ↗</h3>
-            <p>Открыть личное досье</p>
-        </button>
-
-        <button class="member" onclick="showBio('tarasyuk')">
-            <span>02 / MEMBER</span>
-            <h3>Олександр Тарасюк ↗</h3>
-            <p>Открыть личное досье</p>
-        </button>
-
-        <button class="member" onclick="showBio('masterskikh')">
-            <span>03 / MEMBER</span>
-            <h3>Илья Мастерских ↗</h3>
-            <p>Открыть личное досье</p>
-        </button>
-
-    </div>
-
-</section>
-
-<!-- КАРТА -->
-
-<section class="map-section">
-
-    <span class="eyebrow">GERMANY · WETZLAR</span>
-
-    <h2>НАША<br>ТЕРРИТОРИЯ</h2>
-
-    <p style="color:#aaa19a">
-        Главная точка сбора — Forum Wetzlar.
-    </p>
-
-    <div id="map"></div>
-
-    <p class="map-note">
-        Красным выделена приблизительная территория Forum Wetzlar.
-    </p>
-
-</section>
-
-<!-- ЗАКОНЫ -->
-
-<section class="dark">
-
-    <span class="eyebrow">THE CODE</span>
-
-    <h2>ЗАКОНЫ<br>ПАЦИКОВ</h2>
-
-    <div class="rule">01 — Быть чётким.</div>
-    <div class="rule">02 — Не забывать своих.</div>
-    <div class="rule">03 — Уважать легенды.</div>
-    <div class="rule">04 — Создавать новые истории.</div>
-
-</section>
-
-<footer>
-    <span>PV® — ПАЦИКИ ВЕЦЛАРА</span>
-    <span>WETZLAR · GERMANY</span>
-    <span>EST. FOREVER</span>
-</footer>
-
-<!-- ОКНО ПРОФИЛЯ -->
-
-<div class="modal" id="bioModal" onclick="closeOutside(event)">
-
-    <div class="modal-content">
-
-        <button class="close" onclick="closeBio()">×</button>
-
-        <span class="profile-label" id="bioNumber"></span>
-
-        <div class="profile-avatar" id="bioAvatar">?</div>
-
-        <h2 id="bioName"></h2>
-
-        <p id="bioText"></p>
-
-        <div class="profile-info">
-            <small>СТАТУС УЧАСТНИКА</small>
-            <p id="bioStatus"></p>
-        </div>
-
-        <div class="profile-footer">
-            PACIKI WETZLAR® — OFFICIAL MEMBER
-        </div>
-
-    </div>
-
-</div>
-
-<script>
-
-/* БИОГРАФИИ УЧАСТНИКОВ */
-
-const bios = {
-
-    makarov: {
-        number: "01 / LEGEND",
-        name: "Иван Макаров",
-        avatar: "И",
-        text: "Здесь находится личная биография Ивана Макарова. Напиши его историю, интересы, достижения и интересные факты.",
-        status: "Легенда объединения"
-    },
-
-    tarasyuk: {
-        number: "02 / MEMBER",
-        name: "Олександр Тарасюк",
-        avatar: "О",
-        text: "Здесь находится личная биография Олександра Тарасюка. Добавь информацию о его характере, увлечениях и историях.",
-        status: "Официальный участник"
-    },
-
-    masterskikh: {
-        number: "03 / SPECIAL MEMBER",
-        name: "Илья Мастерских",
-        avatar: "И",
-        text: "Здесь находится личная биография Ильи Мастерских. Напиши, чем он известен, какие у него интересы и почему он особенный участник команды.",
-        status: "Особая личность объединения"
-    }
-
-};
-
-/* ОТКРЫТИЕ ПРОФИЛЯ */
-
-function showBio(person) {
-
-    const bio = bios[person];
-
-    document.getElementById("bioNumber").textContent = bio.number;
-    document.getElementById("bioName").textContent = bio.name;
-    document.getElementById("bioAvatar").textContent = bio.avatar;
-    document.getElementById("bioText").textContent = bio.text;
-    document.getElementById("bioStatus").textContent = bio.status;
-
-    document.getElementById("bioModal").classList.add("active");
-
-    document.body.style.overflow = "hidden";
-}
-
-/* ЗАКРЫТИЕ ПРОФИЛЯ */
-
-function closeBio() {
-    document.getElementById("bioModal").classList.remove("active");
-    document.body.style.overflow = "";
-}
-
-function closeOutside(event) {
-    if (event.target.id === "bioModal") {
-        closeBio();
-    }
-}
-
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") {
-        closeBio();
-    }
-});
-
-/* GOOGLE MAPS */
-
-function initMap() {
-
-    const forum = {
-        lat: 50.56474,
-        lng: 8.50495
-    };
-
-    const map = new google.maps.Map(
-        document.getElementById("map"),
-        {
-            center: forum,
-            zoom: 17,
-            mapTypeId: "roadmap",
-            mapTypeControl: false,
-            streetViewControl: false,
-            fullscreenControl: true
-        }
-    );
-
-    const marker = new google.maps.Marker({
-        position: forum,
-        map: map,
-        title: "Forum Wetzlar"
-    });
-
-    const info = new google.maps.InfoWindow({
-        content: `
-            <div style="color:#171513">
-                <b>FORUM WETZLAR</b>
-                <br>
-                Главная точка сбора пациков
             </div>
-        `
-    });
+        </section>
 
-    marker.addListener("click", function() {
-        info.open(map, marker);
-    });
+        <!-- КАРТА -->
 
-    /* ПРИБЛИЗИТЕЛЬНЫЙ КОНТУР FORUM */
+        <section>
+            <h2 class="section-title">НАША ТЕРРИТОРИЯ</h2>
 
-    const forumArea = new google.maps.Polygon({
-        paths: [
-            { lat: 50.56505, lng: 8.50455 },
-            { lat: 50.56510, lng: 8.50530 },
-            { lat: 50.56455, lng: 8.50540 },
-            { lat: 50.56445, lng: 8.50460 }
-        ],
+            <p class="map-description">
+                Вецлар, Германия. Главная точка сбора —
+                Forum Wetzlar.
+            </p>
 
-        strokeColor: "#a52e40",
-        strokeOpacity: 1,
-        strokeWeight: 4,
-        fillColor: "#a52e40",
-        fillOpacity: 0.25,
-        map: map
-    });
+            <div id="map"></div>
+        </section>
 
-    forumArea.addListener("click", function() {
-        info.setContent(
-            "<div style='color:#171513'><b>ТЕРРИТОРИЯ ПАЦИКОВ</b><br>Forum Wetzlar</div>"
+        <!-- SOUNDCLOUD -->
+
+        <section>
+            <h2 class="section-title">НАШ ЗВУК</h2>
+
+            <div class="soundcloud">
+                <p>Музыка и вайб нашей компании</p>
+
+                <a
+                    href="https://soundcloud.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    ОТКРЫТЬ SOUNDCLOUD
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        © 2026 ПАЦИКИ ВЕЦЛАРА · WETZLAR, GERMANY
+    </footer>
+
+    <!-- ОКНО ПРОФИЛЯ -->
+
+    <div class="modal" id="bioModal" onclick="closeOutside(event)">
+
+        <div class="modal-content">
+
+            <span class="close" onclick="closeBio()">&times;</span>
+
+            <div class="modal-avatar" id="bioAvatar">ИМ</div>
+
+            <div id="bioNumber">PROFILE 001</div>
+
+            <h2 id="bioName">Имя</h2>
+
+            <p id="bioText">Описание участника</p>
+
+            <div id="bioStatus">ПАЦИК ВЕЦЛАРА</div>
+
+        </div>
+    </div>
+
+    <!-- LEAFLET JAVASCRIPT -->
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+
+        // ПРОФИЛИ УЧАСТНИКОВ
+
+        const bios = {
+
+            makarov: {
+                number: "PROFILE 001",
+                avatar: "ИМ",
+                name: "Иван Макаров",
+                text: "Участник легендарной компании Пацики Вецлара. Здесь можно добавить его настоящую биографию, интересы и достижения.",
+                status: "ПАЦИК ВЕЦЛАРА"
+            },
+
+            tarasyuk: {
+                number: "PROFILE 002",
+                avatar: "ОТ",
+                name: "Олександр Тарасюк",
+                text: "Участник легендарной компании Пацики Вецлара. Здесь можно добавить его настоящую биографию, интересы и достижения.",
+                status: "ПАЦИК ВЕЦЛАРА"
+            },
+
+            masterskikh: {
+                number: "PROFILE 003",
+                avatar: "ИМ",
+                name: "Илья Мастерских",
+                text: "Участник легендарной компании Пацики Вецлара. Здесь можно добавить его настоящую биографию, интересы и достижения.",
+                status: "ПАЦИК ВЕЦЛАРА"
+            }
+
+        };
+
+        // ОТКРЫТИЕ ПРОФИЛЯ
+
+        function showBio(person) {
+
+            const bio = bios[person];
+
+            if (!bio) return;
+
+            document.getElementById("bioNumber").textContent = bio.number;
+            document.getElementById("bioAvatar").textContent = bio.avatar;
+            document.getElementById("bioName").textContent = bio.name;
+            document.getElementById("bioText").textContent = bio.text;
+            document.getElementById("bioStatus").textContent = bio.status;
+
+            document.getElementById("bioModal").style.display = "flex";
+        }
+
+        // ЗАКРЫТИЕ ПРОФИЛЯ
+
+        function closeBio() {
+            document.getElementById("bioModal").style.display = "none";
+        }
+
+        function closeOutside(event) {
+            if (event.target.id === "bioModal") {
+                closeBio();
+            }
+        }
+
+        // ЗАКРЫТИЕ ПО ESCAPE
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                closeBio();
+            }
+        });
+
+        // ПЕРЕКЛЮЧЕНИЕ ТЕМЫ
+
+        function toggleTheme() {
+            document.body.classList.toggle("light");
+        }
+
+        // LEAFLET MAP
+
+        const forum = [50.56474, 8.50495];
+
+        const map = L.map("map").setView(forum, 17);
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 19
+            }
+        ).addTo(map);
+
+        // МАРКЕР FORUM WETZLAR
+
+        const marker = L.marker(forum).addTo(map);
+
+        marker.bindPopup(`
+            <b>FORUM WETZLAR</b><br>
+            Главная территория пациков
+        `).openPopup();
+
+        // ПРИМЕРНАЯ ТЕРРИТОРИЯ
+
+        const forumArea = L.polygon(
+            [
+                [50.56505, 8.50455],
+                [50.56510, 8.50530],
+                [50.56455, 8.50540],
+                [50.56445, 8.50460]
+            ],
+            {
+                color: "#a52e40",
+                fillColor: "#a52e40",
+                fillOpacity: 0.3,
+                weight: 4
+            }
+        ).addTo(map);
+
+        forumArea.bindPopup(
+            "<b>ТЕРРИТОРИЯ ПАЦИКОВ</b><br>Forum Wetzlar"
         );
 
-        info.setPosition(forum);
-        info.open(map);
-    });
-
-}
-
-</script>
-
-<!-- ВСТАВЬ GOOGLE MAPS API KEY ВМЕСТО YOUR_API_KEY -->
-
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
-</script>
+    </script>
 
 </body>
 </html>
