@@ -1,543 +1,63 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ПАЦИКИ ВЕЦЛАРА</title>
-
-    <!-- LEAFLET -->
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #111111;
-            --card: #1c1c1c;
-            --text: #f3eee5;
-            --accent: #a52e40;
-            --muted: #aaa29a;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: Arial, sans-serif;
-            transition: 0.3s;
-        }
-
-        body.light {
-            --bg: #eee8dc;
-            --card: #ffffff;
-            --text: #171717;
-            --accent: #922638;
-            --muted: #625c56;
-        }
-
-        header {
-            min-height: 350px;
-            padding: 70px 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background:
-                linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.85)),
-                url("cubaimg.jpg") center/cover;
-        }
-
-        header h1 {
-            font-size: clamp(36px, 7vw, 75px);
-            font-weight: 900;
-            letter-spacing: 5px;
-            color: #fff;
-            text-shadow: 0 4px 20px #000;
-        }
-
-        header p {
-            margin-top: 15px;
-            color: #ddd;
-            font-size: 17px;
-            letter-spacing: 3px;
-        }
-
-        .theme-button {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 1000;
-            padding: 11px 16px;
-            border: 1px solid var(--accent);
-            background: var(--card);
-            color: var(--text);
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        main {
-            max-width: 1100px;
-            margin: auto;
-            padding: 45px 20px;
-        }
-
-        section {
-            margin-bottom: 65px;
-        }
-
-        .section-title {
-            font-size: 30px;
-            text-align: center;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-        }
-
-        .section-title::after {
-            content: "";
-            display: block;
-            width: 65px;
-            height: 3px;
-            background: var(--accent);
-            margin: 12px auto 0;
-        }
-
-        .members {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 22px;
-        }
-
-        .member {
-            background: var(--card);
-            border: 1px solid #444;
-            border-radius: 12px;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.25s;
-        }
-
-        .member:hover {
-            transform: translateY(-7px);
-            border-color: var(--accent);
-            box-shadow: 0 10px 30px rgba(165, 46, 64, .2);
-        }
-
-        .avatar {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 18px;
-            border-radius: 50%;
-            background: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 38px;
-            font-weight: bold;
-            color: white;
-            border: 3px solid #d5a0a8;
-        }
-
-        .member h3 {
-            font-size: 21px;
-            margin-bottom: 8px;
-        }
-
-        .member p {
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .map-description {
-            text-align: center;
-            color: var(--muted);
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        #map {
-            width: 100%;
-            height: 500px;
-            border: 2px solid var(--accent);
-            border-radius: 10px;
-            z-index: 1;
-        }
-
-        .soundcloud {
-            text-align: center;
-            padding: 35px 20px;
-            background: var(--card);
-            border-radius: 12px;
-            border: 1px solid #444;
-        }
-
-        .soundcloud p {
-            color: var(--muted);
-            margin-bottom: 20px;
-        }
-
-        .soundcloud a {
-            display: inline-block;
-            padding: 13px 25px;
-            background: var(--accent);
-            color: white;
-            text-decoration: none;
-            border-radius: 7px;
-            transition: 0.2s;
-        }
-
-        .soundcloud a:hover {
-            background: #c13b50;
-            transform: scale(1.04);
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px 15px;
-            border-top: 1px solid #444;
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        /* MODAL */
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            inset: 0;
-            background: rgba(0,0,0,.85);
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            position: relative;
-            background: var(--card);
-            color: var(--text);
-            width: 100%;
-            max-width: 450px;
-            padding: 35px 25px;
-            border-radius: 14px;
-            border: 1px solid var(--accent);
-            text-align: center;
-            animation: appear .2s ease;
-        }
-
-        @keyframes appear {
-            from {
-                opacity: 0;
-                transform: scale(.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 17px;
-            font-size: 30px;
-            cursor: pointer;
-            color: var(--muted);
-        }
-
-        .close:hover {
-            color: var(--accent);
-        }
-
-        .modal-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 35px;
-            font-weight: bold;
-            margin: 0 auto 18px;
-        }
-
-        #bioNumber {
-            color: var(--accent);
-            margin-bottom: 10px;
-            font-size: 13px;
-            letter-spacing: 2px;
-        }
-
-        #bioName {
-            margin-bottom: 15px;
-            font-size: 25px;
-        }
-
-        #bioText {
-            color: var(--muted);
-            line-height: 1.7;
-        }
-
-        #bioStatus {
-            margin-top: 20px;
-            color: var(--accent);
-            font-size: 13px;
-            letter-spacing: 1px;
-        }
-
-        @media (max-width: 600px) {
-            header {
-                min-height: 280px;
-            }
-
-            header p {
-                font-size: 13px;
-            }
-
-            main {
-                padding: 35px 15px;
-            }
-
-            #map {
-                height: 400px;
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050505">
+    <title>Raf Simons — Belgium • Mode • Design</title>
+    <meta name="description" content="A visual tribute to the world of Raf Simons: fashion, design and history.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-    <button class="theme-button" onclick="toggleTheme()">
-        ☀ / ☾ ТЕМА
-    </button>
-
-    <header>
-        <h1>ПАЦИКИ ВЕЦЛАРА</h1>
-        <p>WETZLAR · GERMANY · 2026</p>
-    </header>
-
     <main>
-
-        <!-- УЧАСТНИКИ -->
-
-        <section>
-            <h2 class="section-title">НАШИ ПАЦИКИ</h2>
-
-            <div class="members">
-
-                <div class="member" onclick="showBio('makarov')">
-                    <div class="avatar">ИМ</div>
-                    <h3>Иван Макаров</h3>
-                    <p>Участник тусовки</p>
-                </div>
-
-                <div class="member" onclick="showBio('tarasyuk')">
-                    <div class="avatar">ОТ</div>
-                    <h3>Олександр Тарасюк</h3>
-                    <p>Участник тусовки</p>
-                </div>
-
-                <div class="member" onclick="showBio('masterskikh')">
-                    <div class="avatar">ИМ</div>
-                    <h3>Илья Мастерских</h3>
-                    <p>Участник тусовки</p>
-                </div>
-
-            </div>
+        <section class="main" id="top">
+            <p class="subtitle">BELGIUM <span>•</span> MODE <span>•</span> DESIGN</p>
+            <h1 class="no-select">Raf Simons</h1>
+            <p class="hero-note">AN INDEPENDENT VISION OF FASHION</p>
+            <a class="scroll-link" href="#events" aria-label="Scroll to explore">SCROLL TO EXPLORE <span>↓</span></a>
         </section>
 
-        <!-- КАРТА -->
-
-        <section>
-            <h2 class="section-title">НАША ТЕРРИТОРИЯ</h2>
-
-            <p class="map-description">
-                Вецлар, Германия. Главная точка сбора —
-                Forum Wetzlar.
-            </p>
-
-            <div id="map"></div>
-        </section>
-
-        <!-- SOUNDCLOUD -->
-
-        <section>
-            <h2 class="section-title">НАШ ЗВУК</h2>
-
-            <div class="soundcloud">
-                <p>Музыка и вайб нашей компании</p>
-
-                <a
-                    href="https://soundcloud.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    ОТКРЫТЬ SOUNDCLOUD
+        <section class="events" id="events" aria-label="Explore">
+            <div class="section-topline"><span>01 / EXPLORE</span><span>THE WORLD OF RAF SIMONS</span></div>
+            <div class="cards">
+                <a class="event-card" href="#tour">
+                    <span class="card-index">01</span>
+                    <div><h2>D+A TOUR</h2><p>Fashion Mode</p></div>
+                    <span class="card-arrow">↗</span>
+                </a>
+                <a class="event-card" href="#home">
+                    <span class="card-index">02</span>
+                    <div><h2>OUR HOME</h2><p>Paris mode dom</p></div>
+                    <span class="card-arrow">↗</span>
+                </a>
+                <a class="event-card" href="#history">
+                    <span class="card-index">03</span>
+                    <div><h2>OUR HISTORY</h2><p>You must know your history</p></div>
+                    <span class="card-arrow">↗</span>
+                </a>
+                <a class="event-card" href="#collection">
+                    <span class="card-index">04</span>
+                    <div><h2>NEW COLLECTION</h2><p>Available only until 2027</p></div>
+                    <span class="card-arrow">↗</span>
                 </a>
             </div>
         </section>
 
+        <section class="next-section" id="history">
+            <div class="section-topline"><span>02 / THE ARCHIVE</span><span>EST. 1995</span></div>
+            <p class="eyebrow">FASHION • CULTURE • IDENTITY</p>
+            <h2>THE WORLD OF<br>RAF SIMONS<span>.</span></h2>
+            <p class="archive-copy">A study of youth culture, music, art and the changing language of fashion.</p>
+            <div class="awards" id="tour">
+                <span>CFDA FASHION AWARDS</span>
+                <span>THE FASHION AWARDS</span>
+                <span>SWISS TEXTILES AWARD</span>
+            </div>
+            <div class="footer-line" id="home"><span>RAF SIMONS</span><a href="#top">BACK TO TOP ↑</a><span id="collection">BELGIUM • MODE • DESIGN</span></div>
+        </section>
     </main>
-
-    <footer>
-        © 2026 ПАЦИКИ ВЕЦЛАРА · WETZLAR, GERMANY
-    </footer>
-
-    <!-- ОКНО ПРОФИЛЯ -->
-
-    <div class="modal" id="bioModal" onclick="closeOutside(event)">
-
-        <div class="modal-content">
-
-            <span class="close" onclick="closeBio()">&times;</span>
-
-            <div class="modal-avatar" id="bioAvatar">ИМ</div>
-
-            <div id="bioNumber">PROFILE 001</div>
-
-            <h2 id="bioName">Имя</h2>
-
-            <p id="bioText">Описание участника</p>
-
-            <div id="bioStatus">ПАЦИК ВЕЦЛАРА</div>
-
-        </div>
-    </div>
-
-    <!-- LEAFLET JAVASCRIPT -->
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <script>
-
-        // ПРОФИЛИ УЧАСТНИКОВ
-
-        const bios = {
-
-            makarov: {
-                number: "PROFILE 001",
-                avatar: "ИМ",
-                name: "Иван Макаров",
-                text: "Участник легендарной компании Пацики Вецлара. Здесь можно добавить его настоящую биографию, интересы и достижения.",
-                status: "ПАЦИК ВЕЦЛАРА"
-            },
-
-            tarasyuk: {
-                number: "PROFILE 002",
-                avatar: "ОТ",
-                name: "Олександр Тарасюк",
-                text: "Участник легендарной компании Пацики Вецлара. Здесь можно добавить его настоящую биографию, интересы и достижения.",
-                status: "ПАЦИК ВЕЦЛАРА"
-            },
-
-            masterskikh: {
-                number: "PROFILE 003",
-                avatar: "ИМ",
-                name: "Илья Мастерских",
-                text: "Участник легендарной компании Пацики Вецлара. Здесь можно добавить его настоящую биографию, интересы и достижения.",
-                status: "ПАЦИК ВЕЦЛАРА"
-            }
-
-        };
-
-        // ОТКРЫТИЕ ПРОФИЛЯ
-
-        function showBio(person) {
-
-            const bio = bios[person];
-
-            if (!bio) return;
-
-            document.getElementById("bioNumber").textContent = bio.number;
-            document.getElementById("bioAvatar").textContent = bio.avatar;
-            document.getElementById("bioName").textContent = bio.name;
-            document.getElementById("bioText").textContent = bio.text;
-            document.getElementById("bioStatus").textContent = bio.status;
-
-            document.getElementById("bioModal").style.display = "flex";
-        }
-
-        // ЗАКРЫТИЕ ПРОФИЛЯ
-
-        function closeBio() {
-            document.getElementById("bioModal").style.display = "none";
-        }
-
-        function closeOutside(event) {
-            if (event.target.id === "bioModal") {
-                closeBio();
-            }
-        }
-
-        // ЗАКРЫТИЕ ПО ESCAPE
-
-        document.addEventListener("keydown", function(event) {
-            if (event.key === "Escape") {
-                closeBio();
-            }
-        });
-
-        // ПЕРЕКЛЮЧЕНИЕ ТЕМЫ
-
-        function toggleTheme() {
-            document.body.classList.toggle("light");
-        }
-
-        // LEAFLET MAP
-
-        const forum = [50.56474, 8.50495];
-
-        const map = L.map("map").setView(forum, 17);
-
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                attribution: '&copy; OpenStreetMap contributors',
-                maxZoom: 19
-            }
-        ).addTo(map);
-
-        // МАРКЕР FORUM WETZLAR
-
-        const marker = L.marker(forum).addTo(map);
-
-        marker.bindPopup(`
-            <b>FORUM WETZLAR</b><br>
-            Главная территория пациков
-        `).openPopup();
-
-        // ПРИМЕРНАЯ ТЕРРИТОРИЯ
-
-        const forumArea = L.polygon(
-            [
-                [50.56505, 8.50455],
-                [50.56510, 8.50530],
-                [50.56455, 8.50540],
-                [50.56445, 8.50460]
-            ],
-            {
-                color: "#a52e40",
-                fillColor: "#a52e40",
-                fillOpacity: 0.3,
-                weight: 4
-            }
-        ).addTo(map);
-
-        forumArea.bindPopup(
-            "<b>ТЕРРИТОРИЯ ПАЦИКОВ</b><br>Forum Wetzlar"
-        );
-
-    </script>
-
 </body>
 </html>
